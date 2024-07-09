@@ -1,0 +1,8 @@
+.idea
+*.tfvars
+.terraform
+*.DS_Store
+*.terraform.lock.hcl
+*.terraform.tfstate
+*.terraform.tfstate.backup
+*-lambda.zip

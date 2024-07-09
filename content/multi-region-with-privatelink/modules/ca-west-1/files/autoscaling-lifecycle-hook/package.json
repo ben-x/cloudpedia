@@ -1,0 +1,16 @@
+{
+  "name": "autoscaling-lifecycle-hook",
+  "version": "1.0.0",
+  "description": "A module for handling EC2 Instance-terminate and Instance-launch lifecycle hook events",
+  "main": "index.js",
+  "type": "module",
+  "author": {
+    "name": "Cloudipedia"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.583.0",
+    "@aws-sdk/client-cloudwatch-events": "^3.583.0",
+    "@aws-sdk/client-auto-scaling": "^3.583.0"
+  }
+}
