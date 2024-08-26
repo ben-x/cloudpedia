@@ -25,13 +25,12 @@ resource "aws_lb_target_group" "central_app_tg" {
 module "customer_alb" {
   source = "../../../common-modules/aws-alb"
 
-  allow_all_egress = true
+  allow_all_egress           = true
   enable_deletion_protection = false
-  idle_timeout_seconds = "60"
-
-  name          = "customer-alb"
-  is_internal   = false
-  tags          = var.tags
+  idle_timeout_seconds       = "60"
+  is_internal                = false
+  name                       = "customer-alb"
+  tags                       = var.tags
 
   listener_config = {
     http_port_80 = {

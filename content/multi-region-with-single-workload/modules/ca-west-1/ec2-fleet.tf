@@ -7,10 +7,6 @@ module "app_fleet" {
   source = "../../../common-modules/aws-ec2-fleet"
 
   name = "app-fleet"
-  vpc = {
-    id         = aws_vpc.main.id
-    subnet_ids = local.private_subnet_ids
-  }
 
   ingress_rules = {
     allow_app_port = {
@@ -33,6 +29,11 @@ module "app_fleet" {
       APP_PORT            = var.app_port
     })
   )
+
+  vpc = {
+    id         = aws_vpc.main.id
+    subnet_ids = local.private_subnet_ids
+  }
 }
 
 resource "aws_autoscaling_lifecycle_hook" "instance_launch_lifecycle_hook" {
