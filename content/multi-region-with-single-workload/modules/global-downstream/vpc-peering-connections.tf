@@ -25,7 +25,7 @@ module "vpc_peering_ca_west_1_eu_central_1" {
 resource "aws_route" "ca_west_1_to_eu_central_1" {
   provider = aws.ca-west-1
 
-  for_each = var.ca_west_1.subnets.public_subnets.route_tables
+  for_each = var.ca_west_1.subnets.private_subnets.route_tables
 
   destination_cidr_block = var.eu_central_1.vpc.main.cidr_block
   vpc_peering_connection_id = module.vpc_peering_ca_west_1_eu_central_1.aws_vpc_peering_connection_id

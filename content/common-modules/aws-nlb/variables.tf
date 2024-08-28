@@ -22,10 +22,11 @@ variable "name" {
 
 variable "listener_config" {
   type = map(object({
-    protocol        = string
-    port            = number
-    ssl_policy      = optional(string, "ELBSecurityPolicy-TLS13-1-2-2021-06")
-    certificate_arn = optional(string)
+    certificate_arn  = optional(string)
+    protocol         = string
+    port             = number
+    ssl_policy       = optional(string, "ELBSecurityPolicy-TLS13-1-2-2021-06")
+    target_group_arn = string
   }))
   description = "Configuration for the listener attached to the ALB"
 

@@ -27,7 +27,11 @@ module "ca_west_1" {
   }
 
   aws_region = "ca-west-1"
-  cidr_blocks = local.ca_west_1.cidr_blocks
+  cidr_blocks = merge(local.ca_west_1.cidr_blocks, {
+    externals = {
+      eu_central_1_vpc = local.eu_central_1.cidr_blocks.vpc
+    }
+  })
   dns_config = module.global_upstream.domain_config.ca_west_1
 
   tags = merge(local.default_tags, {
@@ -44,7 +48,11 @@ module "eu_central_1" {
 
   aws_region = "eu-central-1"
 
-  cidr_blocks = local.eu_central_1.cidr_blocks
+  cidr_blocks = merge(local.eu_central_1.cidr_blocks, {
+    externals = {
+      ca_west_1_vpc = local.ca_west_1.cidr_blocks.vpc
+    }
+  })
   dns_config = module.global_upstream.domain_config.eu_central_1
 
   tags = merge(local.default_tags, {
@@ -66,7 +74,8 @@ module "global_downstream" {
       main = module.ca_west_1.vpc
     }
     subnets = {
-      public_subnets = module.ca_west_1.public_subnets
+      private_subnets = module.ca_west_1.private_subnets
+      public_subnets  = module.ca_west_1.public_subnets
     }
   }
 
@@ -76,7 +85,8 @@ module "global_downstream" {
       main = module.eu_central_1.vpc
     }
     subnets = {
-      public_subnets = module.eu_central_1.public_subnets
+      private_subnets = module.eu_central_1.private_subnets
+      public_subnets  = module.eu_central_1.public_subnets
     }
   }
 

@@ -45,18 +45,11 @@ resource "aws_network_acl_rule" "ingress_private_subnet" {
       to_port        = 0
     }
     200 = {
-      cidr_block     = "0.0.0.0/0"
+      cidr_block     = var.cidr_blocks.externals.eu_central_1_vpc
       protocol       = "tcp"
       rule_action    = "allow"
-      from_port      = 1024
-      to_port        = 65535
-    }
-    300 = {
-      cidr_block     = "0.0.0.0/0"
-      protocol       = "all"
-      rule_action    = "allow"
-      from_port      = 0
-      to_port        = 0
+      from_port      = var.app_port
+      to_port        = var.app_port
     }
   }
 
@@ -94,11 +87,25 @@ resource "aws_network_acl_rule" "egress_public_subnet" {
 resource "aws_network_acl_rule" "ingress_public_subnet" {
   for_each = {
     100 = {
-      cidr_block     = "0.0.0.0/0"
+      cidr_block     = var.cidr_blocks.vpc
       protocol       = "all"
       rule_action    = "allow"
       from_port      = 0
       to_port        = 0
+    }
+    200 = {
+      cidr_block     = "0.0.0.0/0"
+      protocol       = "all"
+      rule_action    = "allow"
+      from_port      = 80
+      to_port        = 80
+    }
+    300 = {
+      cidr_block     = "0.0.0.0/0"
+      protocol       = "all"
+      rule_action    = "allow"
+      from_port      = 443
+      to_port        = 443
     }
   }
 

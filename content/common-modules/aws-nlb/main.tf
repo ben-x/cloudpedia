@@ -20,10 +20,7 @@ resource "aws_lb_listener" "main" {
   certificate_arn   = contains(["TLS"], each.value.protocol) ? each.value.certificate_arn : null
 
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      status_code = "404"
-    }
+    type             = "forward"
+    target_group_arn = each.value.target_group_arn
   }
 }

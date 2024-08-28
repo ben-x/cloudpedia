@@ -7,7 +7,7 @@ resource "aws_placement_group" "main" {
 resource "aws_autoscaling_group" "main" {
   name                      = var.name
   default_cooldown          = 300
-  desired_capacity          = 1
+  desired_capacity          = var.scaling_config.min_size
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"

@@ -10,7 +10,7 @@ module "app_fleet" {
 
   ingress_rules = {
     allow_app_port = {
-      cidr_blocks      = [aws_vpc.main.cidr_block]
+      cidr_blocks      = [aws_vpc.main.cidr_block, var.cidr_blocks.externals.eu_central_1_vpc]
       source_port      = var.app_port
       destination_port = var.app_port
       protocol         = "tcp"

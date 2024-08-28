@@ -27,6 +27,7 @@ variable "aws_region" {
 
 variable "cidr_blocks" {
   type = object({
+    externals       = map(string)
     vpc             = string
     private_subnet  = map(string)
     public_subnet   = map(string)
@@ -36,6 +37,9 @@ variable "cidr_blocks" {
   CIDR block values for VPCs and Subnets
   Example:
   {
+    externals = {
+      ca_west_1_vpc = "192.168.16.23/16"
+    }
     vpc = "10.0.0.1/16",
     private_subnet = {
       a = "10.0.1.0/24",

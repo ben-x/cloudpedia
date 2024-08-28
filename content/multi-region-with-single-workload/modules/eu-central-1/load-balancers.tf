@@ -22,14 +22,14 @@ resource "aws_lb_target_group" "central_app_tg" {
   }
 }
 
-module "customer_alb" {
+module "app_alb" {
   source = "../../../common-modules/aws-alb"
 
   allow_all_egress           = true
   enable_deletion_protection = false
   idle_timeout_seconds       = "60"
   is_internal                = false
-  name                       = "customer-alb"
+  name                       = "app-alb"
   tags                       = var.tags
 
   listener_config = {
@@ -52,7 +52,7 @@ module "customer_alb" {
 }
 
 resource "aws_lb_listener_rule" "http_port_80" {
-  listener_arn = module.customer_alb.listeners["http_port_80"].arn
+  listener_arn = module.app_alb.listeners["http_port_80"].arn
   priority     = 1
   tags         = var.tags
 
@@ -74,7 +74,7 @@ resource "aws_lb_listener_rule" "http_port_80" {
 }
 
 resource "aws_lb_listener_rule" "http_port_443" {
-  listener_arn = module.customer_alb.listeners["http_port_443"].arn
+  listener_arn = module.app_alb.listeners["http_port_443"].arn
   priority     = 1
   tags         = var.tags
 
@@ -90,17 +90,38 @@ resource "aws_lb_listener_rule" "http_port_443" {
   }
 }
 
+resource "aws_lb_target_group" "central_app_tg_nlb" {
+  name        = "central-app-tg-nlb"
+  port        = var.app_port
+  protocol    = "TCP"
+  target_type = "ip"
+  ip_address_type = "ipv4"
+  tags        = var.tags
+  vpc_id      = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    interval            = 15
+    protocol            = "TCP"
+    timeout             = 10
+    unhealthy_threshold = 2
+  }
+}
+
 module "app_nlb" {
   source = "../../../common-modules/aws-nlb"
 
-  is_internal = true
-  name        = "app-nlb"
-  tags        = var.tags
+  enable_deletion_protection = false
+  is_internal                = true
+  name                       = "app-nlb"
+  tags                        = var.tags
 
   listener_config = {
     http_port_80 = {
-      protocol = "TCP"
-      port     = "80"
+      protocol         = "TCP"
+      port             = "80"
+      target_group_arn = aws_lb_target_group.central_app_tg_nlb.arn
     }
   }
 
@@ -108,22 +129,5 @@ module "app_nlb" {
     id         = aws_vpc.main.id
     cidr_block = aws_vpc.main.cidr_block
     subnet_ids = local.private_subnet_ids
-  }
-}
-
-resource "aws_lb_listener_rule" "nlb_http_port_80" {
-  listener_arn = module.app_nlb.listeners["http_port_80"].arn
-  priority     = 1
-  tags         = var.tags
-
-  action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.central_app_tg.arn
-  }
-
-  condition {
-    host_header {
-      values = ["*"]
-    }
   }
 }

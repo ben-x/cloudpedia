@@ -28,7 +28,10 @@ resource "aws_iam_role_policy" "target_group_manager_lambda" {
         "elasticloadbalancing:DeregisterTargets"
       ]
       Effect   = "Allow"
-      Resource = aws_lb_target_group.central_app_tg.arn
+      Resource = [
+        aws_lb_target_group.central_app_tg.arn,
+        aws_lb_target_group.central_app_tg_nlb.arn
+      ]
       Sid = "AllowTargetManagement"
     }, {
       Action   = [
@@ -53,7 +56,10 @@ data "archive_file" "lambda_source_archive" {
 resource "aws_lambda_function" "target_group_manager_lambda" {
   environment {
     variables = {
-      TARGET_GROUP_ARN = aws_lb_target_group.central_app_tg.arn
+      TARGET_GROUP_ARNS = jsonencode([
+        aws_lb_target_group.central_app_tg.arn,
+        aws_lb_target_group.central_app_tg_nlb.arn
+      ])
     }
   }
 

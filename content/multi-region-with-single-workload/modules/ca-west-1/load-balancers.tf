@@ -90,40 +90,25 @@ resource "aws_lb_listener_rule" "alb_http_port_443" {
   }
 }
 
-module "app_nlb" {
-  source = "../../../common-modules/aws-nlb"
-
-  is_internal = true
-  name        = "app-nlb"
-  tags        = var.tags
-
-  listener_config = {
-    http_port_80 = {
-      protocol = "TCP"
-      port     = "80"
-    }
-  }
-
-  vpc = {
-    id         = aws_vpc.main.id
-    cidr_block = aws_vpc.main.cidr_block
-    subnet_ids = local.private_subnet_ids
-  }
-}
-
-resource "aws_lb_listener_rule" "nlb_http_port_80" {
-  listener_arn = module.app_nlb.listeners["http_port_80"].arn
-  priority     = 1
-  tags         = var.tags
-
-  action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.app_fleet_tg.arn
-  }
-
-  condition {
-    host_header {
-      values = ["*"]
-    }
-  }
-}
+# module "app_nlb" {
+#   source = "../../../common-modules/aws-nlb"
+#
+#   enable_deletion_protection = false
+#   is_internal                = true
+#   name                       = "app-nlb"
+#   tags                       = var.tags
+#
+#   listener_config = {
+#     http_port_80 = {
+#       protocol         = "TCP"
+#       port             = "80"
+#       target_group_arn = aws_lb_target_group.app_fleet_tg.arn
+#     }
+#   }
+#
+#   vpc = {
+#     id         = aws_vpc.main.id
+#     cidr_block = aws_vpc.main.cidr_block
+#     subnet_ids = local.private_subnet_ids
+#   }
+# }
