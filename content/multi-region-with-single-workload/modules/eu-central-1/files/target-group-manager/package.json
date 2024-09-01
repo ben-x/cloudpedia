@@ -1,0 +1,14 @@
+{
+  "name": "target-group-manager",
+  "version": "1.0.0",
+  "description": "A module that handles registration and de-registration of target to load balancer target group",
+  "main": "index.js",
+  "type": "module",
+  "author": {
+    "name": "Cloudipedia"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-elastic-load-balancing-v2": "^3.583.0"
+  }
+}
