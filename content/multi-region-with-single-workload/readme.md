@@ -17,3 +17,4 @@ This project describes how to serve multiple regions using a single workload.
 5. run `terraform apply` to deploy the resources
 6. By default, the autoscaling is set to 0 instance. Increase to 1 or more
 7. Enter endpoint on browser to load deployed application
+8. Don't forget to destroy the resource once you're done testing.
