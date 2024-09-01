@@ -2,8 +2,6 @@ import { ElasticLoadBalancingV2Client, RegisterTargetsCommand } from '@aws-sdk/c
 
 const elasticLoadBalancingV2Client = new ElasticLoadBalancingV2Client();
 
-console.log('arns', process.env.TARGET_GROUP_ARNS);
-
 async function registerTarget (event) {
   const targetGroupArns = JSON.parse(process.env.TARGET_GROUP_ARNS);
   const { detail } = event;

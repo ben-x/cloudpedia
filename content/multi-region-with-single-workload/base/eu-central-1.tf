@@ -13,9 +13,9 @@ locals {
     }
 
     dns_config = {
-      domain_name = "eu.cloudpedia.xyz"
-      additional_cnames = ["www.eu.cloudpedia.xyz"]
-      route53_zone_id = "Z03282312GEO9VCQYU86I"
+      domain_name = "eu.${var.route53_zone_name}"
+      additional_cnames = []
+      route53_zone_id = var.route53_zone_id
     }
   }
 }
